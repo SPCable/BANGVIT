@@ -200,7 +200,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
     public class GameThread implements Runnable {
 
-        static final int DUCK_NUMBER = 10;
+        static final int DUCK_NUMBER = 3;
         private Thread thread;
         private int i;
 
@@ -251,7 +251,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
                         dogController.getAnimation().start(duckController.isDead());
                         i++;
                     }
-                    if (killedDucks > 5) {
+                    if (killedDucks == 3) {
                         System.out.println("YOU WIN");
                         gameResultImage = Resources.getImage("/images/youWin.png");
                         repaint();

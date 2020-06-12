@@ -5,12 +5,8 @@ import duckhunt.model.Duck;
 import duckhunt.utility.Resources.Resources;
 import duckhunt.utility.sound.Sound;
 import java.awt.image.BufferedImage;
-import java.sql.Time;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.management.loading.PrivateClassLoader;
 
 /**
  *
@@ -45,10 +41,18 @@ public class DuckController {
     private boolean isDead;
     private boolean flownAway;
 
-
-    private int ss = 0;
-    private Timer timer =  new Timer();
+    public int ss = 0;
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask(){
     
+        @Override
+        public void run() {
+            ss++;
+            System.out.println(ss);
+        }
+    };
+
+
 
     private DuckController() {
         currentImage = Resources.getImage("/images/duckUpRight0.png");
@@ -84,6 +88,7 @@ public class DuckController {
     public Duck getDuck() {
         return duck;
     }
+
     private void flight() {
         if (xDirection == RIGHT && yDirection == UP) {
             spriteSheet.setFrames(2, "duckUpRight");
@@ -129,7 +134,9 @@ public class DuckController {
             this.yDirection = UP;
         }
     }
+
     public int t;
+
     private void dead() {
         deadSound.play();
         t = duck.speed();
@@ -190,9 +197,8 @@ public class DuckController {
     }
 
     public class DuckAnimation implements Runnable {
-
         private Thread thread;
-
+        
         public void start() throws InterruptedException {
             reset();
             thread = new Thread(this);
@@ -213,25 +219,17 @@ public class DuckController {
             isDead = false;
             flownAway = false;
             ammunition = 3;
+            
         }
-        private TimerTask task = new TimerTask(){
-        
-            @Override
-            public void run() {
-                ss++;
-                System.out.println(ss);
-            }
-        };
-        @Override
         public void run() {
-            timer.scheduleAtFixedRate(task, 1000,1000);
+
             duckCall.play();
             while (!wasDuckHit && ammunition > 0) {
                 flight();
                 panel.setDuckCurrentImage(currentImage);
                 panel.repaint();
             }
-            if (ammunition == 0 || ss == 5) {
+            if (ammunition == 0 ) {
                 flownAway = true;
                 while (duck.getY() > -50) {
                     flyAway();
@@ -259,5 +257,4 @@ public class DuckController {
             stop();
         }
     }
-
 }
