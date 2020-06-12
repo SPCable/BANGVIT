@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 import duckhunt.controller.GameListener;
 import java.awt.event.ActionEvent;
@@ -139,6 +140,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
         g2D.drawImage(backgroundImg, 0, 0, this);
         g2D.drawImage(cursorImg, this.cursorRectangle.x, this.cursorRectangle.y, this);
+        g2D.drawString("Score " + DuckController.score, 10,21);
 
         if (!dogController.isIntroAnimationFinished()) {
             g2D.drawImage(dogCurrentImage, dog.getX(), dog.getY(), this);
@@ -158,6 +160,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
         if (isGameFinished) {
             g2D.drawImage(gameResultImage, 300, 100, this);
+
             if (showImage && pressEnterImage != null) {
                 g2D.drawImage(pressEnterImage, 300, 150, this);
             }
@@ -255,6 +258,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
                         System.out.println("YOU WIN");
                         gameResultImage = Resources.getImage("/images/youWin.png");
                         repaint();
+
                     } else {
                         System.out.println("YOU LOSE");
                         gameResultImage = Resources.getImage("/images/gameover.png");

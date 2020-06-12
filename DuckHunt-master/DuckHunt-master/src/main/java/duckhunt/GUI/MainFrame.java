@@ -13,6 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 import duckhunt.controller.GameListener;
 import duckhunt.utility.Resources.Resources;
+import javax.swing.JButton;
 
 /**
  * @author Vittorio Polverino
@@ -46,6 +47,7 @@ public class MainFrame extends JFrame implements GameListener {
         instructionsPanel = new InstructionsPanel();
         initPanel(instructionsPanel, false);
 
+        
         goBackAction = new GoBackToMenu();
 
         menuPanel.addMouseListener(new MouseAdapter() {

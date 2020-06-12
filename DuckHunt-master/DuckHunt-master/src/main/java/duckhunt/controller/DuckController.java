@@ -40,6 +40,7 @@ public class DuckController {
     private boolean wasDuckHit;
     private boolean isDead;
     private boolean flownAway;
+    public static int score = 0;
 
     public int ss = 0;
     Timer timer = new Timer();
@@ -137,10 +138,12 @@ public class DuckController {
 
     public int t;
 
-    private void dead() {
+    private int dead() {
         deadSound.play();
         t = duck.speed();
         currentImage = Resources.getImage("/images/duckDead.png");
+        score = score +100;
+        return score;
     }
 
     private void precipitate() {
@@ -161,6 +164,7 @@ public class DuckController {
         currentImage = spriteSheet.getCurrentFrame();
         y = duck.getY();
         y -= 2;
+        score = 0;
         duck.setY(y);
     }
 
