@@ -18,12 +18,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 import duckhunt.controller.GameListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
-import java.util.Random;
 
 /**
  *
@@ -32,10 +32,10 @@ import java.util.Random;
 public class GamePanel extends JPanel implements MouseMotionListener {
 
     /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-    private static final Cursor CURSOR = Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(), "null");
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Cursor CURSOR = Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(), "null");
     private static final int BULLET_NUMBER = 3;
 
     private BufferedImage backgroundImg;
@@ -73,7 +73,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         gameThread.start();
     }
 
-    public void initPanel() {
+    private void initPanel() {
         this.setLayout(null);
         this.setCursor(CURSOR);
         this.addMouseMotionListener(this);
@@ -109,18 +109,8 @@ public class GamePanel extends JPanel implements MouseMotionListener {
                     hitPoint.x -= duck.getX();
                     hitPoint.y -= duck.getY();
                     if (contains(duckController.getCurrentImage(), hitPoint.x, hitPoint.y)) {
-                        // Random rand= new Random();
-                        // int randomNum = rand.nextInt(10) + 1;
-                           if (e.getClickCount() == 2 && !e.isConsumed() && killedDucks>=5){
-                                e.consume();
-                                duckController.theDuckWasHit(true);
-                                killedDucks++;
-                            }
-                            if(killedDucks<=5)
-                            {
-                                duckController.theDuckWasHit(true);
-                                killedDucks++;
-                            }
+                        duckController.theDuckWasHit(true);
+                        killedDucks++;
                     }
                 }
             }
@@ -150,6 +140,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
         g2D.drawImage(backgroundImg, 0, 0, this);
         g2D.drawImage(cursorImg, this.cursorRectangle.x, this.cursorRectangle.y, this);
+        g2D.drawString("Score " + DuckController.score, 10,21);
 
         if (!dogController.isIntroAnimationFinished()) {
             g2D.drawImage(dogCurrentImage, dog.getX(), dog.getY(), this);
@@ -169,6 +160,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
         if (isGameFinished) {
             g2D.drawImage(gameResultImage, 300, 100, this);
+
             if (showImage && pressEnterImage != null) {
                 g2D.drawImage(pressEnterImage, 300, 150, this);
             }
@@ -211,7 +203,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
     public class GameThread implements Runnable {
 
-        static final int DUCK_NUMBER = 10;
+        static final int DUCK_NUMBER = 3;
         private Thread thread;
         private int i;
 
@@ -262,10 +254,11 @@ public class GamePanel extends JPanel implements MouseMotionListener {
                         dogController.getAnimation().start(duckController.isDead());
                         i++;
                     }
-                    if (killedDucks > 7) {
+                    if (killedDucks == 3) {
                         System.out.println("YOU WIN");
                         gameResultImage = Resources.getImage("/images/youWin.png");
                         repaint();
+
                     } else {
                         System.out.println("YOU LOSE");
                         gameResultImage = Resources.getImage("/images/gameover.png");
@@ -280,5 +273,3 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         }
     }
 }
-
-
