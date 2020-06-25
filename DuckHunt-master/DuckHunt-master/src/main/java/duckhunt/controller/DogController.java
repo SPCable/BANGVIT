@@ -43,7 +43,7 @@ public class DogController {
         dogLaugh = Resources.getSound("/sounds/dogLaugh.wav");
         dogIntroAnimation = new DogIntroAnimation();
         dogAnimation = new DogAnimation();
-        spriteSheet = new Spritesheet();
+        spriteSheet = new Spritesheet(1);
         isAnimationFinished = false;
         isJumpFinihed = false;
         x = 0;
