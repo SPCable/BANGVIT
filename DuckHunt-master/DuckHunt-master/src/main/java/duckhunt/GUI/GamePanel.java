@@ -1,6 +1,6 @@
 package duckhunt.GUI;
 
-import duckhunt.controller.DogController;
+//import duckhunt.controller.DogController;
 import duckhunt.controller.DuckController;
 import duckhunt.model.Dog;
 import duckhunt.model.Duck;
@@ -54,7 +54,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
     private Rectangle cursorRectangle;
 
-    private DogController dogController;
+    //private DogController dogController;
     private DuckController duckController;
 
     private GameListener gameListener;
@@ -160,9 +160,9 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         g2D.drawImage(backgroundImg, 0, 0, this);
         g2D.drawImage(cursorImg, this.cursorRectangle.x, this.cursorRectangle.y, this);
 
-        if (!dogController.isIntroAnimationFinished()) {
-            g2D.drawImage(dogCurrentImage, dog.getX(), dog.getY(), this);
-        }
+        // if (!dogController.isIntroAnimationFinished()) {
+        //     g2D.drawImage(dogCurrentImage, dog.getX(), dog.getY(), this);
+        // }
 
         for (int i = 0; i < currentAmmoNumber; i++) {
             g2D.drawImage(ammo[i], i * 30, 520, this);
@@ -238,11 +238,11 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         private int i;
 
         public GameThread() {
-            dog = new Dog();
-            dogController = DogController.getIstance();
+            //dog = new Dog();
+            //dogController = DogController.getIstance();
             duckController = DuckController.getIstance();
-            dogController.setDog(dog);
-            dogController.setPanel(GamePanel.this);
+            //dogController.setDog(dog);
+            //dogController.setPanel(GamePanel.this);
             duckController.setPanel(GamePanel.this);
         }
 
