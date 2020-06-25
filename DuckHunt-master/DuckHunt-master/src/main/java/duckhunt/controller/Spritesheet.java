@@ -13,9 +13,8 @@ public class Spritesheet {
     private int currentFramePosition;
     private long startTime;
     private long delay;
-    private int i;
 
-    public Spritesheet(int i) {
+    public Spritesheet() {
     }
 
 

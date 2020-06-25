@@ -18,14 +18,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+
 import javax.swing.JPanel;
 import duckhunt.controller.GameListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  *
@@ -34,11 +32,11 @@ import java.util.Random;
 public class GamePanel extends JPanel implements MouseMotionListener {
 
     /**
-     *
-     */
-    private static final long serialVersionUID = 1L;
-    private static final Cursor CURSOR = Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(), "null");
-    private static final int BULLET_NUMBER = 10;
+	 *
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final Cursor CURSOR = Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(), "null");
+    private static final int BULLET_NUMBER = 3;
 
     private BufferedImage backgroundImg;
     private BufferedImage cursorImg;
@@ -60,7 +58,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
     private GameListener gameListener;
 
     private Dog dog;
-    private ArrayList<Duck> ducks = new ArrayList<Duck>();
+    private Duck duck;
 
     private GameThread gameThread;
 
@@ -75,7 +73,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         gameThread.start();
     }
 
-    public void initPanel() {
+    private void initPanel() {
         this.setLayout(null);
         this.setCursor(CURSOR);
         this.addMouseMotionListener(this);
@@ -89,7 +87,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         pressEnterImage = Resources.getImage("/images/pressEnter.png");
         shootSound = Resources.getSound("/sounds/shoot.wav");
         endOfGameSound = Resources.getSound("/sounds/gameClear.wav");
-        ammo = new BufferedImage[10];
+        ammo = new BufferedImage[3];
         for (int i = 0; i < BULLET_NUMBER; i++) {
             ammo[i] = Resources.getImage("/images/bullet.png");
         }
@@ -101,35 +99,18 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         gameThread = new GameThread();
 
         this.addMouseListener(new MouseAdapter() {
-            int dem = 0;
             @Override
             public void mousePressed(MouseEvent e) {
                 shootSound.play();
                 Point hitPoint = e.getPoint();
-                if (ducks.get(1) != null) {
+                if (duck != null) {
                     duckController.decreaseAmmunition();
                     currentAmmoNumber--;
-                    hitPoint.x -= ducks.get(1).getX();
-                    hitPoint.y -= ducks.get(1).getY();
+                    hitPoint.x -= duck.getX();
+                    hitPoint.y -= duck.getY();
                     if (contains(duckController.getCurrentImage(), hitPoint.x, hitPoint.y)) {
-                        // Random rand= new Random();
-                        // int randomNum = rand.nextInt(10) + 1;
-                           if (killedDucks>0){
-                               dem++;
-                               System.out.println("Da bang trung" + dem);
-                               if(dem == 2)
-                               {
-                                    duckController.theDuckWasHit(true);
-                                    killedDucks++;
-                                    dem = 0;
-                               }
-                            }
-                            else
-                            {
-                                duckController.theDuckWasHit(true);
-                                killedDucks++;
-                                dem = 0;
-                            }
+                        duckController.theDuckWasHit(true);
+                        killedDucks++;
                     }
                 }
             }
@@ -159,6 +140,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
         g2D.drawImage(backgroundImg, 0, 0, this);
         g2D.drawImage(cursorImg, this.cursorRectangle.x, this.cursorRectangle.y, this);
+        g2D.drawString("Score " + DuckController.score, 10,21);
 
         if (!dogController.isIntroAnimationFinished()) {
             g2D.drawImage(dogCurrentImage, dog.getX(), dog.getY(), this);
@@ -168,21 +150,17 @@ public class GamePanel extends JPanel implements MouseMotionListener {
             g2D.drawImage(ammo[i], i * 30, 520, this);
         }
 
-        if (duckController.isDuckVisible(1)) {
-            g2D.drawImage(duckCurrentImage, ducks.get(1).getX(), ducks.get(1).getY(), this);
-        }
-
-        if (duckController.isDuckVisible(2)) {
-            g2D.drawImage(duckCurrentImage, ducks.get(2).getX(), ducks.get(2).getY(), this);
+        if (duckController.isDuckVisible()) {
+            g2D.drawImage(duckCurrentImage, duck.getX(), duck.getY(), this);
         }
 
         if (duckController.isFlownAway()) {
             g2D.drawImage(flyAwayImage, 300, 100, this);
         }
-        
 
         if (isGameFinished) {
             g2D.drawImage(gameResultImage, 300, 100, this);
+
             if (showImage && pressEnterImage != null) {
                 g2D.drawImage(pressEnterImage, 300, 150, this);
             }
@@ -223,17 +201,9 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         }
     }
 
-    public void addChim(int n)
-    {
-        for(int i = 1 ;i<=n;i++)
-        {
-            ducks.add(new Duck());
-        }
-    }
-
     public class GameThread implements Runnable {
 
-        static final int DUCK_NUMBER = 10;
+        static final int DUCK_NUMBER = 3;
         private Thread thread;
         private int i;
 
@@ -248,14 +218,12 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
         public void start() {
             reset();
-            addChim(3);
             thread = new Thread(this);
             thread.start();
         }
 
         public void stop() {
             duckController.theDuckIsFlownAway(false);
-     
             currentAmmoNumber = 0;
             endOfGameSound.play();
             imageBlinker();
@@ -268,7 +236,6 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         private void reset() {
             isGameFinished = false;
             duckController.theDuckIsFlownAway(false);
-    
             isGameFinished = false;
             killedDucks = 0;
             i = 0;
@@ -278,24 +245,27 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         public void run() {
             while (!isGameFinished) {
                 try {
-                    // dogController.getIntroAnimation().start();
-                    // while (i < DUCK_NUMBER) {
-                        currentAmmoNumber = 10;
-                        duckController.setDuck(ducks.get(1));
-                        duckController.setDuck(ducks.get(2));
-                        duckController.getDuckAnimation(2);
-                    //}
-                    // if (killedDucks > 100) {
-                    //     System.out.println("YOU WIN");
-                    //     gameResultImage = Resources.getImage("/images/youWin.png");
-                    //     repaint();
-                    // } else {
-                    //     System.out.println("YOU LOSE");
-                    //     gameResultImage = Resources.getImage("/images/gameover.png");
-                    //     repaint();
-                    // }
-                    // isGameFinished = true;
-                } catch (Exception ex) {
+                    dogController.getIntroAnimation().start();
+                    while (i < DUCK_NUMBER) {
+                        currentAmmoNumber = 3;
+                        duck = new Duck();
+                        duckController.setDuck(duck);
+                        duckController.getDuckAnimation().start();
+                        dogController.getAnimation().start(duckController.isDead());
+                        i++;
+                    }
+                    if (killedDucks == 3) {
+                        System.out.println("YOU WIN");
+                        gameResultImage = Resources.getImage("/images/youWin.png");
+                        repaint();
+
+                    } else {
+                        System.out.println("YOU LOSE");
+                        gameResultImage = Resources.getImage("/images/gameover.png");
+                        repaint();
+                    }
+                    isGameFinished = true;
+                } catch (InterruptedException ex) {
                     System.out.println("an error occured during game thread execution");
                 }
             }
@@ -303,5 +273,3 @@ public class GamePanel extends JPanel implements MouseMotionListener {
         }
     }
 }
-
-

@@ -33,7 +33,7 @@ public class MainFrame extends JFrame implements GameListener {
     }
 
     private void initFrame() {
-        this.setTitle("Shoot The Duck");
+        this.setTitle("Duck Hunt");
         this.setIconImage(Resources.getImage("/images/duckicon.png"));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
