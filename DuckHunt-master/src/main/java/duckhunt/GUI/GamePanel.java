@@ -105,19 +105,20 @@ public class GamePanel extends JPanel implements MouseMotionListener {
             @Override
             public void mousePressed(MouseEvent e) {
                 shootSound.play();
+                currentAmmoNumber--;
                 Point hitPoint = e.getPoint();
                 if (ducks.get(1) != null) {
-                    duckController.decreaseAmmunition();
-                    currentAmmoNumber--;
+                    duckController.decreaseAmmunition();        
                     hitPoint.x -= ducks.get(1).getX();
                     hitPoint.y -= ducks.get(1).getY();
-                    if (contains(duckController.getCurrentImage(), hitPoint.x, hitPoint.y)) {
+                    
+                    if (contains(duckController.getCurrentImage(), hitPoint.x-10, hitPoint.y-10)) {
                         // Random rand= new Random();
                         // int randomNum = rand.nextInt(10) + 1;
                            if (killedDucks>0){
                                dem++;
-                               System.out.println("Da bang trung" + dem);
-                               if(dem == 2)
+                               System.out.println("Da bang trung 1" );
+                               if(dem == 1)
                                {
                                     duckController.theDuckWasHit(true);
                                     killedDucks++;
@@ -134,6 +135,10 @@ public class GamePanel extends JPanel implements MouseMotionListener {
                 }
             }
         });
+
+
+
+        
     }
 
     public boolean contains(BufferedImage image, int x, int y) {
@@ -174,6 +179,10 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
         if (duckController.isDuckVisible(2)) {
             g2D.drawImage(duckCurrentImage, ducks.get(2).getX(), ducks.get(2).getY(), this);
+        }
+
+        if (duckController.isDuckVisible(0)) {
+            g2D.drawImage(duckCurrentImage, ducks.get(0).getX(), ducks.get(0).getY(), this);
         }
 
         if (duckController.isFlownAway()) {
@@ -225,7 +234,7 @@ public class GamePanel extends JPanel implements MouseMotionListener {
 
     public void addChim(int n)
     {
-        for(int i = 1 ;i<=n;i++)
+        for(int i = 0 ;i<n;i++)
         {
             ducks.add(new Duck());
         }
@@ -281,9 +290,10 @@ public class GamePanel extends JPanel implements MouseMotionListener {
                     // dogController.getIntroAnimation().start();
                     // while (i < DUCK_NUMBER) {
                         currentAmmoNumber = 10;
+                        duckController.setDuck(ducks.get(0));
                         duckController.setDuck(ducks.get(1));
                         duckController.setDuck(ducks.get(2));
-                        duckController.getDuckAnimation(2);
+                        duckController.getDuckAnimation(3);
                     //}
                     // if (killedDucks > 100) {
                     //     System.out.println("YOU WIN");

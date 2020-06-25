@@ -34,16 +34,11 @@ public class DuckController {
     private GamePanel panel;
     private ArrayList<Duck> ducks = new ArrayList<Duck>();
 
-    private int xDirection;
-    private int yDirection;
-    private int x;
-    private int y;
+    private int[] xDirection = new int[5];
+    private int[] yDirection= new int[5];;
+    private int[] x= new int[5];;
+    private int[] y= new int[5];;
 
-    
-    private int xDirection1;
-    private int yDirection1;
-    private int x1;
-    private int y1;
 
     private int ammunition;
 
@@ -72,21 +67,18 @@ public class DuckController {
         currentImage[2] = Resources.getImage("/images/duckUpRight0.png");
         deadSound = Resources.getSound("/sounds/duckDead.wav");
         duckCall = Resources.getSound("/sounds/duckCall.wav");
-        xDirection = RIGHT;
-        yDirection = DOWN;
-        spriteSheet[1] = new Spritesheet(1);
-        xDirection1 = LEFT1;
-        yDirection1 = DOWN1;
+        for(int i = 0; i<5;i++)
+        {
+            xDirection[i] = RIGHT;
+            yDirection[i] = DOWN;
+            //spriteSheet[i] = new Spritesheet();
+            x[i] = 1;
+            y[i] = 1;
+        }
         isDuckVisible = false;
         wasDuckHit = false;
         isDead = false;
         flownAway = false;
-        x1 = 1;
-        y1 = 1;
-
-        x = 1;
-        y = 1;
-
     }
 
     public static DuckController getIstance() {
@@ -124,50 +116,34 @@ public class DuckController {
         // }
 
         try {
-            x = ducks.get(1).getX();
-            y = ducks.get(1).getY();
-            x += xDirection;
-            y += yDirection;
+            for(int i = 0;i<5;i++)
+            {
+                x[i] = ducks.get(i).getX();
+                y[i] = ducks.get(i).getY();
+                x[i] += xDirection[i];
+                y[i] += yDirection[i];
+            }
 
-
-            x1 = ducks.get(2).getX();
-            y1 = ducks.get(2).getY();
-            x1 += xDirection1;
-            y1 += yDirection1;
-
-            System.out.println(xDirection1 +" "+ yDirection1);
+            //System.out.println(xDirection1 +" "+ yDirection1);
             Thread.sleep(t);
         } catch (Exception e) {
         }
-        ducks.get(1).setX(x);
-        ducks.get(1).setY(y);
+        for(int i = 0;i<5;i++)
+        {
+            ducks.get(i).setX(x[i]);
+            ducks.get(i).setY(y[i]);
 
-        ducks.get(2).setX(x1);
-        ducks.get(2).setY(y1);
+        if (ducks.get(i).getX() <= 0) {
+            this.xDirection[i] = RIGHT;
 
-
-        if (ducks.get(1).getX() <= 0) {
-            this.xDirection = RIGHT;
-
-        } else if (ducks.get(1).getX() >= 750) {
-            this.xDirection = LEFT;
+        } else if (ducks.get(i).getX() >= 750) {
+            this.xDirection[i] = LEFT;
         }
-        if (ducks.get(1).getY() <= 0) {
-            this.yDirection = DOWN;
-        } else if (ducks.get(1).getY() >= 390) {
-            this.yDirection = UP;
+        if (ducks.get(i).getY() <= 0) {
+            this.yDirection[i] = DOWN;
+        } else if (ducks.get(i).getY() >= 390) {
+            this.yDirection[i] = UP;
         }
-
-        if (ducks.get(2).getX() <= 0) {
-            this.xDirection1 = RIGHT1;
-
-        } else if (ducks.get(2).getX() >= 750) {
-            this.xDirection1 = LEFT1;
-        }
-        if (ducks.get(2).getY() <= 0) {
-            this.yDirection1 = DOWN1;
-        } else if (ducks.get(2).getY() >= 390) {
-            this.yDirection1 = UP1;
         }
     }
 
@@ -187,13 +163,6 @@ public class DuckController {
         spriteSheet[1].update();
         currentImage[1] = spriteSheet[1].getCurrentFrame();
 
-        y = ducks.get(1).getY();
-        y += 6;
-        ducks.get(1).setY(y);
-
-        y1 = ducks.get(2).getY();
-        y1 += 6;
-        ducks.get(2).setY(y1);
     }
 
     private void flyAway(int id) {
@@ -202,11 +171,6 @@ public class DuckController {
         spriteSheet[1].update();
         currentImage[1] = spriteSheet[1].getCurrentFrame();
 
-
-        y = ducks.get(1).getY();
-        y -= 2;
-        score = 0;
-        ducks.get(1).setY(y);
 
     }
 
