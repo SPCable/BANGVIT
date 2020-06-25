@@ -23,6 +23,7 @@ import duckhunt.controller.GameListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
+import java.awt.Rectangle;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -107,32 +108,54 @@ public class GamePanel extends JPanel implements MouseMotionListener {
                 shootSound.play();
                 currentAmmoNumber--;
                 Point hitPoint = e.getPoint();
-                if (ducks.get(1) != null) {
+                        // int x=e.getX();
+                        // int y=e.getY();
+                        // System.out.println(x+","+y);
+                        // int q=ducks.get(1).getX();
+                        // int w=ducks.get(1).getY();
+                        // System.out.println(q+","+w);
+                if (ducks.get(0) != null || ducks.get(1) != null || ducks.get(2) != null) { //       // 
                     duckController.decreaseAmmunition();        
-                    hitPoint.x -= ducks.get(1).getX();
-                    hitPoint.y -= ducks.get(1).getY();
+                    // hitPoint.x -= ducks.get(0).getX();
+                    // hitPoint.y -= ducks.get(0).getY();
                     
-                    if (contains(duckController.getCurrentImage(), hitPoint.x-10, hitPoint.y-10)) {
+                    //contains(duckController.getCurrentImage(), hitPoint.x-10, hitPoint.y-10)
+                    if (new Rectangle(ducks.get(0).getX()+40, ducks.get(0).getY(),47,100).contains(getMousePosition())
+                        || new Rectangle(ducks.get(1).getX()+40, ducks.get(1).getY(),48,100).contains(getMousePosition())
+                        || new Rectangle(ducks.get(2).getX()+40, ducks.get(2).getY(),46,100).contains(getMousePosition())
+                        ) {
+                        //
+                        //    
                         // Random rand= new Random();
                         // int randomNum = rand.nextInt(10) + 1;
-                           if (killedDucks>0){
-                               dem++;
+                           if (new Rectangle(ducks.get(0).getX()+40, ducks.get(0).getY(),47,100).contains(getMousePosition())){
+                               //dem++;
                                System.out.println("Da bang trung 1" );
-                               if(dem == 1)
-                               {
+                            //    if(dem == 1)
+                            //    {
                                     duckController.theDuckWasHit(true);
                                     killedDucks++;
                                     dem = 0;
-                               }
+                               //}
                             }
-                            else
+                            else if(new Rectangle(ducks.get(1).getX()+40, ducks.get(1).getY(),47,100).contains(getMousePosition()))
                             {
-                                duckController.theDuckWasHit(true);
-                                killedDucks++;
-                                dem = 0;
+                                System.out.println("Da bang trung 2" );
+                                duckController.theDuckWasHit1(true);
+                                    killedDucks++;
+                                    dem = 0;
+                            }
+                            else if(new Rectangle(ducks.get(2).getX()+40, ducks.get(2).getY(),47,100).contains(getMousePosition()))
+                            {
+                                System.out.println("Da bang trung 3" );
+                                //duckController.theDuckWasHit(true);
+                                    killedDucks++;
+                                    dem = 0;
                             }
                     }
                 }
+                ///////////////////////////////////
+                
             }
         });
 

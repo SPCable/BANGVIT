@@ -47,6 +47,7 @@ public class DuckController {
 
     private boolean isDuckVisible;
     private boolean wasDuckHit;
+    private boolean wasDuckHit1;
     private boolean isDead;
     private boolean flownAway;
     public static int score = 0;
@@ -64,7 +65,7 @@ public class DuckController {
 
     private DuckController() {
         currentImage[1] = Resources.getImage("/images/duckUpRight0.png");
-        currentImage[2] = Resources.getImage("/images/duckUpRight0.png");
+        currentImage[2] = Resources.getImage("/img1/duckUpRight0.png");
         deadSound = Resources.getSound("/sounds/duckDead.wav");
         duckCall = Resources.getSound("/sounds/duckCall.wav");
         for(int i = 0; i<5;i++)
@@ -77,6 +78,7 @@ public class DuckController {
         }
         isDuckVisible = false;
         wasDuckHit = false;
+        wasDuckHit1 = false;
         isDead = false;
         flownAway = false;
     }
@@ -156,6 +158,14 @@ public class DuckController {
         score = score + 100;
         return score;
     }
+    
+    public int dead1(int id) {
+        deadSound.play();
+        t = ducks.get(id).speed();
+        currentImage[2] = Resources.getImage("/img1/duckDead.png");
+        score = score + 100;
+        return score;
+    }
 
     private void precipitate(int id) {
         spriteSheet[1].setFrames(4, "duckPrecipitate");
@@ -178,6 +188,10 @@ public class DuckController {
         return currentImage[1];
     }
 
+    public BufferedImage getCurrentImage1() {
+        return currentImage[2];
+    }
+
     public boolean isDuckVisible(int id) {
         return isDuckVisible;
     }
@@ -198,6 +212,10 @@ public class DuckController {
         this.wasDuckHit = pValue;
     }
 
+    public void theDuckWasHit1(final boolean pValue) {
+        this.wasDuckHit1 = pValue;
+    }
+
     public void decreaseAmmunition() {
         ammunition--;
         System.out.println(ammunition);
@@ -211,8 +229,8 @@ public class DuckController {
             start(i);
             run(i);
         }
-
     }
+    
     public void start(int id)
     {
         reset();
@@ -222,6 +240,7 @@ public class DuckController {
     private void reset() {
         isDuckVisible = true;
         wasDuckHit = false;
+        wasDuckHit1 = false;
         isDead = false;
         flownAway = false;
         ammunition = 10;
@@ -259,6 +278,38 @@ public class DuckController {
                 while (ducks.get(1).getY() > -50) {
                     flyAway(1);
                     panel.setDuckCurrentImage(currentImage[1]);
+                    panel.repaint();
+                }
+            } 
+        }
+        while (!wasDuckHit1 && ammunition >0) {
+            flight();
+            panel.setDuckCurrentImage(currentImage[2]);
+            panel.repaint();
+        }
+        if(wasDuckHit1 && ammunition >=0) {
+            try {
+                dead1(id);
+                panel.setDuckCurrentImage(currentImage[2]);
+                panel.repaint();
+                Thread.sleep(500);
+                while (ducks.get(0).getY() < 420) {
+                    precipitate(0);
+                    panel.setDuckCurrentImage(currentImage[2]);
+                    panel.repaint();
+                }
+                isDead = true;
+            } catch (final InterruptedException ex) {
+                System.out.println("an error occured during duck animation thread");
+            }
+        }
+        else
+        {
+            if (ammunition == 0 ) {
+                flownAway = true;
+                while (ducks.get(1).getY() > -50) {
+                    flyAway(1);
+                    panel.setDuckCurrentImage(currentImage[2]);
                     panel.repaint();
                 }
             } 
